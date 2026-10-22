@@ -1,0 +1,69 @@
+/*
+ * Tema "Preto absoluto + prata" da sala fria (monocromatico).
+ * Carregado no index.html e no login.html. As cores fixas dos scripts
+ * sao trocadas por ion-tema.js; aqui ficam as variaveis e o que nao
+ * passa por ele.
+ *
+ * Vermelho (portas/erros), verde (conectado) e laranja (modo edicao)
+ * continuam coloridos: sao as unicas cores da tela, de proposito.
+ */
+
+:root {
+  --bg: #000000;
+  --panel: #0a0a0b;
+  --line: #232326;
+  --text: #f2f2f3;
+  --muted: #9a9aa0;
+  --cyan: #e4e4e7;
+  --cyan-dark: #d4d4d8;
+  --front: #a1a1aa;
+  --rack: #141416;
+  --rackline: #34343a;
+  --wall: #262629;
+  --door: #ef4444;
+  --edit: #f59e0b;
+
+  /* planta (ion-planta.js) */
+  --ion-piso: #0a0a0b;
+  --ion-grade: #141416;
+  --ion-ponto: #e4e4e74d;
+  --ion-parede: #262629;
+  --ion-contorno: #a1a1aa73;
+  --ion-marca: #a1a1aa24;
+  --ion-mini-fileira: #a1a1aa;
+}
+
+html body {
+  background:
+    radial-gradient(
+      circle at 15% 0,
+      #141416 0,
+      transparent 30%
+    ),
+    var(--bg);
+}
+
+/* botoes e aba ativa em prata: texto escuro para ler bem */
+html body .action-btn.primary,
+html body .mini-btn.primary,
+html body .room-switch-button.active,
+html body .submit-button,
+html body .patch-connection-action.primary {
+  color: #0a0a0b;
+}
+
+/* Destaque da busca: brilho claro translucido */
+html body #room.searching .rack.match {
+  background: #e4e4e71c;
+  border-color: #e4e4e7;
+}
+
+html body #room.searching .rack.match .front {
+  background: #e4e4e7;
+  box-shadow: none;
+}
+
+html body #room.searching .rack.match .id {
+  color: #ffffff;
+  border-color: #e4e4e766;
+}

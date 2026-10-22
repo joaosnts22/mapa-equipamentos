@@ -1,0 +1,175 @@
+/*
+ * Tema "Grafite e ambar" do projeto area tecnica.
+ * Carregado no index.html e no login.html. Os seletores comecam com
+ * "html body" para valer sobre os estilos que os scripts injetam depois.
+ */
+
+:root {
+  --bg: #111315;
+  --panel: #1b1e22;
+  --line: #33383f;
+  --text: #eceae6;
+  --muted: #9a9fa6;
+  --cyan: #e8a33d;
+  --cyan-dark: #e8a33d;
+  --front: #e8a33d;
+  --rack: #262a30;
+  --rackline: #4a5058;
+  --wall: #0b0c0e;
+  --door: #ef4444;
+  --edit: #7cb4e8;
+
+  --ambar: #e8a33d;
+  --ambar-forte: #f5b544;
+  --ambar-texto: #1a1205;
+  --grafite-1: #16181b;
+  --grafite-2: #1b1e22;
+  --grafite-3: #24282d;
+  --grafite-4: #2a2e33;
+}
+
+html body {
+  background:
+    radial-gradient(
+      circle at 15% 0,
+      #2a210f 0,
+      transparent 32%
+    ),
+    var(--bg);
+}
+
+/* Cabecalho e cartoes */
+html body .card {
+  background: var(--grafite-2);
+}
+
+html body .stat small {
+  color: var(--muted);
+}
+
+html body .search {
+  background: var(--grafite-1);
+}
+
+html body .search:focus {
+  border-color: var(--ambar);
+}
+
+html body .action-btn,
+html body .close {
+  background: var(--grafite-3);
+}
+
+html body .action-btn.primary,
+html body .mini-btn.primary,
+html body .room-switch-button.active {
+  background: var(--ambar);
+  border-color: var(--ambar-forte);
+  color: var(--ambar-texto);
+  box-shadow: none;
+}
+
+html body .submit-button {
+  color: var(--ambar-texto);
+}
+
+html body .room-switcher {
+  background: var(--grafite-1);
+}
+
+html body .room-switch-button:hover {
+  background: var(--grafite-3);
+}
+
+html body .mini-btn {
+  background: var(--grafite-4);
+}
+
+/* Modo edicao (azul, para nao confundir com o destaque ambar) */
+html body .edit-banner {
+  border-color: #7cb4e888;
+  background: #7cb4e81a;
+  color: #b9d8f5;
+}
+
+html body .edit-hint {
+  color: #b9d8f5;
+}
+
+html body .room.editing .rack {
+  box-shadow: 0 0 0 2px #7cb4e825, 0 15px 28px #0005;
+}
+
+/* Fileiras no mapa */
+html body .rack {
+  background: linear-gradient(145deg, #2a2e34, #22252a);
+}
+
+html body .rack .owner {
+  color: var(--muted);
+}
+
+html body .front {
+  box-shadow: none;
+}
+
+/* Destaque da busca */
+html body .room.searching .rack.match {
+  background: #f5b5442e;
+  border-color: var(--ambar-forte);
+  box-shadow: 0 0 0 3px #f5b54433, 0 0 26px #f5b54455;
+}
+
+html body .room.searching .rack.match .front {
+  background: var(--ambar-forte);
+  box-shadow: 0 0 14px #f5b54488;
+}
+
+/* Painel lateral da fileira */
+html body .drawer {
+  background: #15171a;
+}
+
+html body .drawer-head {
+  background: #15171aee;
+}
+
+html body .rack-front {
+  background: #0d0e10;
+}
+
+html body .ru {
+  border-top-color: #22262b;
+  color: #6b7178;
+}
+
+html body .equipment {
+  background: #3a2a12;
+  border-color: var(--ambar);
+  color: #ffd9a0;
+}
+
+html body .doc {
+  background: var(--grafite-4);
+  color: #f0b860;
+}
+
+html body .item p {
+  color: #d5d3cf;
+}
+
+html body .form-field input,
+html body .form-field select,
+html body .form-field textarea {
+  background: #121416;
+}
+
+html body .form-field input:focus,
+html body .form-field select:focus,
+html body .form-field textarea:focus {
+  border-color: var(--ambar);
+}
+
+html body .footer {
+  color: #6b7178;
+}

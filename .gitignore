@@ -1,0 +1,14 @@
+# Dados de cada instalacao: nunca versionar
+*/backend/data/
+*/backend/documentos/
+*/backend/logs/
+*/backend/backups/
+*.db
+*.db-shm
+*.db-wal
+
+# Ambiente Python
+.venv/
+venv/
+__pycache__/
+*.pyc

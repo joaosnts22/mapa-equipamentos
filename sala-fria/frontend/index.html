@@ -1,0 +1,2222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mapa da Sala Fria - Navegação Horizontal</title>
+<style>
+:root{--bg:#07111f;--panel:#0d1929;--line:#26384e;--text:#edf4fb;--muted:#8da2ba;--cyan:#55dcff;--front:#169bd5;--rack:#26394d;--rackline:#6f8ba6;--wall:#03070c;--door:#ef4444;--edit:#f59e0b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0,#102741 0,transparent 30%),var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}.app{max-width:1450px;margin:auto;padding:30px}.header{display:flex;justify-content:space-between;align-items:end;gap:20px}.eyebrow{font-size:13px;color:var(--cyan);font-weight:800;letter-spacing:.08em}.header h1{font-size:40px;margin:7px 0 0}.header-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}.search{width:340px;background:#0b1727;border:1px solid var(--line);border-radius:13px;color:#fff;padding:14px 16px;outline:0}.action-btn{border:1px solid var(--line);border-radius:11px;background:#17283c;color:#fff;padding:12px 15px;font-weight:800;cursor:pointer}.action-btn:hover{filter:brightness(1.14)}.action-btn.primary{background:#0e7490;border-color:#22d3ee}.action-btn.danger{background:#4a1d24;border-color:#ef4444}.action-btn[hidden]{display:none}.edit-banner{display:none;margin:18px 0 0;padding:12px 15px;border:1px solid #f59e0b88;border-radius:12px;background:#5d3a091f;color:#ffd58a;font-size:13px}.edit-banner.active{display:block}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;margin:24px 0}.card{background:#0c1828e8;border:1px solid var(--line);border-radius:17px}.stat{padding:18px}.stat small{color:#8fc2e6}.stat strong{display:block;font-size:24px;margin-top:7px}.map-card{padding:18px}.map-title{font-size:17px;font-weight:800;margin-bottom:14px;display:flex;justify-content:space-between;gap:12px}.edit-status{color:var(--edit);font-size:12px}.room-wrap{overflow:auto}.room{position:relative;min-width:1050px;height:600px;border:1px solid var(--line);border-radius:17px;background-color:#081526;background-image:linear-gradient(#1c30451f 1px,transparent 1px),linear-gradient(90deg,#1c30451f 1px,transparent 1px);background-size:25px 25px;overflow:hidden;touch-action:none}.room.editing{background-image:radial-gradient(circle,#74cfff99 1.25px,transparent 1.5px);background-size:25px 25px;background-position:0 0}.wall{position:absolute;background:var(--wall);box-shadow:0 0 0 1px #172434}.wall.top-left{left:4%;top:5%;width:5%;height:12px}.wall.top-right{left:20%;right:4%;top:5%;height:12px}.wall.left-top{left:4%;top:5%;bottom:7%;width:12px}.wall.left-bottom{display:none}.wall.bottom-left{left:4%;right:4%;bottom:7%;height:12px}.wall.bottom-right{display:none}.wall.right{right:4%;top:5%;bottom:7%;width:12px}.door-gap{position:absolute;left:9%;top:3.7%;width:11%;height:24px;border-top:5px solid var(--door);border-left:5px solid var(--door);border-right:5px solid var(--door);border-radius:4px 4px 0 0}.door-text{position:absolute;left:11.1%;top:7.2%;color:#ff8080;font-size:10px;font-weight:800;letter-spacing:.12em}.rack{position:absolute;border:2px solid var(--rackline);border-radius:8px;background:linear-gradient(145deg,#263b50,#1a2b3d);color:var(--text);cursor:pointer;box-shadow:0 15px 28px #0005;transition:transform .2s,border-color .2s,filter .2s,opacity .2s;text-align:left;padding:12px;overflow:hidden;user-select:none}.rack:hover{transform:translateY(-3px);border-color:#9db7ce;filter:brightness(1.12)}.room.editing .rack{cursor:grab;border-style:dashed;border-color:var(--edit);box-shadow:0 0 0 2px #f59e0b25,0 15px 28px #0005}.room.editing .rack:hover{transform:none}.room.editing .rack.dragging{cursor:grabbing;z-index:10;border-style:solid;box-shadow:0 0 0 3px #f59e0b55,0 0 30px #f59e0b55}.room.searching .rack{opacity:.18;filter:grayscale(1);transform:scale(.97)}.room.searching .rack.match{opacity:1;filter:none;transform:scale(1.045);z-index:3;background:linear-gradient(145deg,#9b2cff,#4d16c8);border-color:#e0b1ff;box-shadow:0 0 0 3px #bd68ff44,0 0 34px #a73fffcc}.room.searching .rack.match .front{background:#57e8ff;box-shadow:0 0 18px #57e8ff}.room.searching .rack.match .owner{color:#fff}.rack .id{font-size:18px;font-weight:850}.rack .owner{font-size:10px;color:#a8b9ca;margin-top:4px}.front{position:absolute;background:var(--front);box-shadow:0 0 14px #189bd566}.front-right{right:-1px;top:-1px;bottom:-1px;width:9px;border-radius:0 7px 7px 0}.front-bottom{left:-1px;right:-1px;bottom:-1px;height:9px;border-radius:0 0 7px 7px}.front-label{position:absolute;color:#8ee8ff;font-size:9px;font-weight:800;letter-spacing:.08em}.vertical .front-label{right:11px;top:50%;transform:rotate(-90deg) translateY(-50%);transform-origin:right top}.horizontal .front-label{left:50%;bottom:12px;transform:translateX(-50%)}.rack.vertical{padding:8px 6px}.rack.vertical .id{font-size:14px;overflow-wrap:anywhere}.rack.vertical .owner{font-size:9px;overflow-wrap:anywhere}.rack.horizontal{padding:7px 10px;display:flex;align-items:center;gap:10px}.rack.horizontal .id{font-size:14px;flex:0 0 auto}.rack.horizontal .owner{font-size:10px;margin-top:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rack.horizontal .front-label{display:none}.orientation-note{position:absolute;left:7%;bottom:2.1%;font-size:10px;color:#6f849a}.overlay{position:fixed;inset:0;background:#000b;backdrop-filter:blur(5px);display:none;justify-content:flex-end;z-index:20}.overlay.open{display:flex}.drawer{width:min(820px,100%);height:100%;overflow:auto;background:#081424;border-left:1px solid var(--line)}.drawer-head{position:sticky;top:0;z-index:2;background:#081424ee;border-bottom:1px solid var(--line);padding:20px 24px;display:flex;justify-content:space-between}.drawer-head small{color:var(--muted)}.drawer-head h2{font-size:31px;margin:3px 0}.close{border:0;border-radius:10px;background:#17283c;color:#fff;width:40px;height:40px;font-size:22px;cursor:pointer}.drawer-body{display:grid;grid-template-columns:290px 1fr;gap:20px;padding:22px}.rack-front{height:600px;position:relative;background:#040b13;border:1px solid var(--line);border-radius:14px;padding:8px}.ru{height:calc(100% / 42);border-top:1px solid #172536;color:#566a81;font-size:8px;padding-left:3px}.equipment{position:absolute;left:43px;right:10px;background:#173d55;border:1px solid #239fd0;color:#afeaff;border-radius:5px;padding:3px 7px;font-size:11px;display:flex;align-items:center;min-height:20px;overflow:hidden}.details{display:flex;flex-direction:column;gap:13px}.info{padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px}.info label{display:block;color:var(--muted);font-size:10px;margin-bottom:4px}.item{padding:16px}.item h3{margin:0 0 10px}.item p{font-size:13px;margin:6px 0;color:#cdd9e5}.doc{margin-top:9px;padding:9px;background:#17314a;border-radius:8px;color:#79dcf4;font-size:12px}.empty{padding:38px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}.footer{text-align:center;color:#63788f;font-size:11px;margin:17px}.rack-admin{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:13px}.mini-btn{border:1px solid var(--line);border-radius:9px;background:#17314a;color:#fff;padding:9px 11px;font-weight:750;cursor:pointer}.mini-btn.primary{background:#0e7490;border-color:#22d3ee}.mini-btn.danger{background:#4a1d24;border-color:#ef4444}.item-actions{display:flex;gap:8px;margin-top:12px}.item-form{padding:16px}.item-form h3{margin:0 0 14px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-field.full{grid-column:1/-1}.form-field label{display:block;color:var(--muted);font-size:10px;font-weight:800;margin-bottom:5px}.form-field input,.form-field select,.form-field textarea{width:100%;border:1px solid var(--line);border-radius:9px;background:#07111f;color:#fff;padding:10px;outline:none}.form-field textarea{min-height:76px;resize:vertical}.form-error{display:none;margin:12px 0;padding:10px;border:1px solid #ef4444;border-radius:9px;background:#4a1d24;color:#fecaca;font-size:12px}.form-error.show{display:block}.form-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:14px}.edit-hint{color:#ffd58a;font-size:12px;margin:0 0 12px}.equipment.editable{cursor:grab;touch-action:none}.equipment.editable:active,.equipment.ru-dragging{cursor:grabbing;z-index:10;opacity:.82;box-shadow:0 0 0 2px #f59e0b88,0 0 22px #f59e0b66}.equipment.ru-conflict{background:#64202a;border-color:#ef4444;color:#fecaca}.rack-front.editing-ru{background-image:linear-gradient(#f59e0b12 1px,transparent 1px);background-size:100% calc(100% / 42)}.equipment.editable{border-color:#f59e0b}.equipment.editable:hover{filter:brightness(1.2)}
+.zoom-bar{display:flex;align-items:center;gap:7px}.zoom-btn{border:1px solid var(--line);background:#17283c;color:#fff;border-radius:8px;padding:7px 10px;font-weight:800;cursor:pointer}.zoom-value{min-width:48px;text-align:center;color:var(--cyan);font-size:12px;font-weight:800}.room-wrap{height:680px;overflow:hidden;border-radius:17px;background:#050d17;cursor:grab;user-select:none}.room-wrap.panning{cursor:grabbing}.room-wrap.panning *{cursor:grabbing!important}.room-stage{position:relative;width:3200px;height:545px}.room{width:3200px;min-width:3200px;height:545px;border-radius:17px}.map-title{align-items:center}.drawer{width:min(1500px,100%)}.drawer-body{display:block;padding:18px}.rack-workspace{display:flex;flex-direction:column;gap:12px}.rack-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.rack-search{flex:1;min-width:230px;background:#07111f;border:1px solid var(--line);border-radius:10px;color:#fff;padding:11px 13px}.rack-viewport{height:690px;overflow:auto;background:#030810;border:1px solid var(--line);border-radius:14px}.rack-stage{width:1200px;height:720px;transform-origin:0 0;padding:18px}.rack-face-grid{position:relative;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(42,1fr);width:1164px;height:684px;border:4px solid #5f7892;background:#07111f;gap:2px;padding:2px}.rack-cell{border:1px solid #26384e;background:#0b1727}.rack-equipment{z-index:2;margin:1px;background:#173d55;border:1px solid #239fd0;color:#afeaff;border-radius:4px;padding:4px 7px;font-size:11px;overflow:hidden;cursor:pointer;display:flex;align-items:center}.rack-face-grid.searching .rack-equipment{opacity:.18;filter:grayscale(1)}.rack-face-grid.searching .rack-equipment.match{opacity:1;filter:none;background:linear-gradient(145deg,#9b2cff,#4d16c8);border-color:#e0b1ff;box-shadow:0 0 24px #a73fffcc;color:#fff}.rack-equipment.editable{cursor:grab;border-color:#f59e0b}.equipment-modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;z-index:40;padding:20px}.equipment-modal.open{display:flex}.equipment-dialog{width:min(620px,100%);max-height:85vh;overflow:auto;background:#081424;border:1px solid var(--line);border-radius:16px;padding:20px}.equipment-dialog-head{display:flex;justify-content:space-between;gap:12px;align-items:start}.equipment-dialog h3{font-size:25px;margin:0 0 15px}.equipment-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.equipment-fields p{margin:0;padding:10px;background:#0c1828;border-radius:9px;color:#cdd9e5}.room-stage .wall.top-right{left:10%;right:48%;top:2.5%}.room-stage .wall.bottom-left{left:2%;right:48%;bottom:53.5%}.room-stage .wall.right{right:48%;top:2.5%;bottom:53.5%}.room .wall.top-left{left:2%;top:2.5%;width:2.5%}.room .wall.left-top{left:2%;top:2.5%;bottom:53.5%}.room .door-gap{left:4.5%;top:1.85%;width:5.5%}.room .door-text{left:5.55%;top:3.6%}.orientation-note{left:3.5%;bottom:52%}
+
+html,body{height:100%;overflow:hidden}.app{height:100vh;max-width:none;padding:14px 18px;display:flex;flex-direction:column;overflow:hidden}.header{flex:0 0 auto}.header h1{font-size:30px}.stats{flex:0 0 auto;margin:12px 0;gap:10px}.stat{padding:11px 16px}.stat strong{font-size:20px;margin-top:3px}.map-card{flex:1 1 auto;min-height:0;padding:12px;display:flex;flex-direction:column}.map-title{flex:0 0 auto;margin-bottom:9px}.room-wrap{flex:1 1 auto;height:auto;min-height:0;overflow:hidden}.footer{display:none}.edit-banner{flex:0 0 auto;margin:10px 0 0;padding:8px 12px}.drawer{height:100vh;overflow:hidden;display:flex;flex-direction:column}.drawer-head{flex:0 0 auto;padding:13px 20px}.drawer-head h2{font-size:25px}.drawer-body{flex:1 1 auto;min-height:0;overflow:hidden;padding:12px}.rack-workspace{height:100%;min-height:0}.rack-toolbar{flex:0 0 auto}.rack-viewport{flex:1 1 auto;height:auto;min-height:0;overflow:hidden;cursor:grab;user-select:none}.rack-viewport.panning{cursor:grabbing}.rack-viewport.panning *{cursor:grabbing!important}.room-wrap,.rack-viewport{scrollbar-width:none}.room-wrap::-webkit-scrollbar,.rack-viewport::-webkit-scrollbar{display:none}
+.room-stage .wall.top-left{left:1%;top:4%;width:20.3188%}.room-stage .wall.top-right{left:25.6188%;right:1%;top:4%}.room-stage .wall.left-top{left:1%;top:5.1376%;bottom:2.3853%}.room-stage .wall.bottom-left{left:1%;right:1%;bottom:2.3853%}.room-stage .wall.right{right:1%;top:5.1376%;bottom:2.3853%}.room-stage .door-gap{left:21.3188%;top:2.6972%;width:4.3%;height:66px}.room-stage .door-text{left:23.4688%;top:14.3853%;width:auto;transform:translateX(-50%);text-align:center;white-space:nowrap}.room-stage .orientation-note{left:2%;bottom:6%}.rack.unnamed .id,.rack.unnamed .owner{display:none}@media(max-width:800px){.app{padding:16px}.header{flex-direction:column;align-items:stretch}.header-actions{justify-content:stretch}.search{width:100%}.action-btn{flex:1}.stats{grid-template-columns:1fr}.drawer-body{grid-template-columns:1fr}.rack-front{height:570px}}
+</style>
+<link rel="stylesheet" href="/mapa-tema.css?v=3">
+</head>
+<body>
+<div class="app">
+<header class="header"><div><div class="eyebrow">NOC</div><h1>Mapa da Sala Fria</h1></div><div class="header-actions"><input id="search" class="search" placeholder="Buscar fileira, equipe ou equipamento"><button id="authSessionButton" class="action-btn">Entrar</button><button id="editButton" class="action-btn primary" hidden>Editar mapa</button><button id="addRackButton" class="action-btn primary" hidden>+ Adicionar fileira</button><button id="saveButton" class="action-btn primary" hidden>Salvar posições</button><button id="cancelButton" class="action-btn" hidden>Cancelar</button></div></header>
+<div id="editBanner" class="edit-banner">Modo de edição ativo. Arraste fileiras no grid. Em uma área vazia, segure o botão esquerdo e arraste para navegar pela sala.</div>
+<section class="stats"><div class="card stat"><small>Fileiras mapeadas</small><strong id="rackCount">0</strong></div><div class="card stat"><small>Equipamentos</small><strong id="equipmentCount">0</strong></div></section>
+<section class="card map-card"><div class="map-title"><span>Vista superior da sala</span><span id="editStatus" class="edit-status"></span></div><div id="roomWrap" class="room-wrap"><div id="roomStage" class="room-stage"><div id="room" class="room">
+<div class="wall top-left"></div><div class="wall top-right"></div><div class="wall left-top"></div><div class="wall left-bottom"></div><div class="wall bottom-left"></div><div class="wall bottom-right"></div><div class="wall right"></div><div class="door-gap"></div><div class="door-text">ENTRADA / SAÍDA</div>
+</div></div></div></section><div class="footer">Dados e identificações demonstrativos. Planta revisada: B6 estreito junto à parede esquerda e parede inferior contínua.</div>
+</div>
+<div class="overlay" id="overlay"><aside class="drawer"><header class="drawer-head"><div><small>DETALHE DA FILEIRA</small><h2 id="drawerTitle"></h2></div><button id="close" class="close">×</button></header><div class="drawer-body"><div class="rack-front" id="rackFront"></div><div class="details" id="details"></div></div></aside></div>
+<div id="equipmentModal" class="equipment-modal"><section class="equipment-dialog"><div class="equipment-dialog-head"><h3 id="equipmentModalTitle"></h3><button id="equipmentModalClose" class="close">×</button></div><div id="equipmentModalBody"></div></section></div><script>
+const STORAGE_KEY='mapaSalaFria.dados.v24';
+const API_DATA_URL='/api/dados/frontend';
+let apiSyncVersion=null;
+const GRID_SIZE=25;
+const originalRacks=[];
+let racks=JSON.parse(JSON.stringify(originalRacks));
+let selectedRackId=null;
+let editingItemId=null;
+let pointerMoved=false;
+function normalizeData(){let seq=1;racks.forEach(r=>{if(r.layout==='vertical'){r.w=1.625;r.h=57.4679;r.front='right'}else if(r.layout==='horizontal'){r.w=8.5313;r.h=7.7064;r.front='bottom'}if(!('displayName' in r))r.displayName=r.id.startsWith('SEM-NOME-')?'':r.id;r.x=Math.max(0,Math.min(Number(r.x)||0,96-r.w));r.y=Math.max(0,Math.min(Number(r.y)||0,93-r.h));r.items.forEach(i=>{if(!i.id)i.id='EQ-'+seq++;if(!('manufacturer' in i))i.manufacturer='';if(!('serial' in i))i.serial='';if(!('function' in i))i.function='';if(!('notes' in i))i.notes='';if(!Number.isInteger(i.column))i.column=((seq-2)%8)+1;if(!Number.isInteger(i.columnSpan))i.columnSpan=1})})}
+let editMode=false;
+let editSnapshot=null;
+let drag=null;
+const room=document.getElementById('room'),overlay=document.getElementById('overlay'),search=document.getElementById('search');
+const roomWrap=document.getElementById('roomWrap'),roomStage=document.getElementById('roomStage');let rackZoom=1,mapPan=null,rackPan=null,rackPanMoved=false;
+const editButton=document.getElementById('editButton'),addRackButton=document.getElementById('addRackButton'),saveButton=document.getElementById('saveButton'),cancelButton=document.getElementById('cancelButton');
+async function loadSavedPositions(){
+  try{
+    const response=await fetch(API_DATA_URL,{
+      method:'GET',
+      headers:{
+        Accept:'application/json'
+      },
+      cache:'no-store'
+    });
+
+    if(!response.ok){
+      throw new Error(
+        `A API respondeu com status ${response.status}.`
+      );
+    }
+
+    const data=await response.json();
+
+    if(!Array.isArray(data?.racks)){
+      throw new Error(
+        'A API não retornou uma lista válida de fileiras.'
+      );
+    }
+
+    racks=data.racks;
+    apiSyncVersion=data?.sync?.version||null;
+
+    document.documentElement.dataset.dataSource='api';
+
+    console.info(
+      'Mapa da Sala Fria: dados carregados da API central.',
+      {
+        racks:racks.length,
+        equipamentos:racks.reduce(
+          (total,rack)=>total+(rack.items?.length||0),
+          0
+        ),
+        versao:apiSyncVersion
+      }
+    );
+
+    return 'api';
+  }catch(apiError){
+    console.warn(
+      'Não foi possível carregar a API central. Tentando dados locais.',
+      apiError
+    );
+
+    try{
+      const saved=JSON.parse(
+        localStorage.getItem(STORAGE_KEY)
+      );
+
+      if(Array.isArray(saved?.racks)){
+        racks=saved.racks;
+        document.documentElement.dataset.dataSource='localStorage';
+
+        console.info(
+          'Mapa da Sala Fria: fallback para localStorage.'
+        );
+
+        return 'localStorage';
+      }
+    }catch(localError){
+      console.warn(
+        'Não foi possível carregar os dados locais.',
+        localError
+      );
+    }
+
+    document.documentElement.dataset.dataSource='html';
+
+    console.info(
+      'Mapa da Sala Fria: usando dados incorporados no HTML.'
+    );
+
+    return 'html';
+  }
+}
+function savePositions(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({version:24,racks:racks}));return true}catch(error){console.warn('O navegador bloqueou o armazenamento local.',error);return false}}
+function showStatus(message){document.getElementById('editStatus').textContent=message;setTimeout(()=>{if(!editMode)document.getElementById('editStatus').textContent=''},3500)}
+function updateCounts(){document.getElementById('rackCount').textContent=racks.length;document.getElementById('equipmentCount').textContent=racks.reduce((n,r)=>n+r.items.length,0)}
+function render(q=search.value){room.querySelectorAll('.rack').forEach(e=>e.remove());q=q.toLowerCase().trim();room.classList.toggle('searching',Boolean(q)&&!editMode);racks.forEach(r=>{const haystack=[r.id,r.displayName,r.owner,...r.items.flatMap(i=>[i.name,i.model,i.asset,...i.docs])].join(' ').toLowerCase();const isMatch=Boolean(q)&&haystack.includes(q);const b=document.createElement('button');b.type='button';b.dataset.rackId=r.id;b.className='rack '+r.layout+(r.displayName===''?' unnamed':'')+(isMatch?' match':'');b.style.cssText=`left:${r.x}%;top:${r.y}%;width:${r.w}%;height:${r.h}%`;b.innerHTML=`<span class="front front-${r.front}"></span><div class="id">${escapeHtml(r.displayName??r.id)}</div><div class="owner">${r.owner}</div>`;b.addEventListener('pointerdown',e=>startDrag(e,r,b));b.onclick=()=>{if(!pointerMoved)openRack(r);pointerMoved=false};room.appendChild(b)})}
+function setEditMode(active){editMode=active;room.classList.toggle('editing',active);document.getElementById('editBanner').classList.toggle('active',active);document.getElementById('editStatus').textContent=active?'MODO DE EDIÇÃO ATIVO':'';editButton.hidden=active;addRackButton.hidden=!active;saveButton.hidden=!active;cancelButton.hidden=!active;search.disabled=active;if(active){search.value='';editSnapshot=JSON.parse(JSON.stringify(racks))}else{editSnapshot=null}render()}
+function startDrag(event,rack,element){pointerMoved=false;if(!editMode||event.button!==0)return;event.preventDefault();const roomRect=room.getBoundingClientRect();const rackRect=element.getBoundingClientRect();drag={rack,element,roomRect,offsetX:event.clientX-rackRect.left,offsetY:event.clientY-rackRect.top};element.classList.add('dragging');element.setPointerCapture(event.pointerId);element.addEventListener('pointermove',moveDrag);element.addEventListener('pointerup',endDrag,{once:true});element.addEventListener('pointercancel',endDrag,{once:true})}
+function moveDrag(event){if(!drag)return;pointerMoved=true;const {rack,element,roomRect,offsetX,offsetY}=drag;const width=element.offsetWidth,height=element.offsetHeight;let px=event.clientX-roomRect.left-offsetX;let py=event.clientY-roomRect.top-offsetY;px=Math.round(px/GRID_SIZE)*GRID_SIZE;py=Math.round(py/GRID_SIZE)*GRID_SIZE;const maxX=Math.floor((room.clientWidth-width)/GRID_SIZE)*GRID_SIZE;const maxY=Math.floor((room.clientHeight-height)/GRID_SIZE)*GRID_SIZE;px=Math.max(0,Math.min(px,maxX));py=Math.max(0,Math.min(py,maxY));rack.x=Number((px/room.clientWidth*100).toFixed(4));rack.y=Number((py/room.clientHeight*100).toFixed(4));element.style.left=px+'px';element.style.top=py+'px'}
+function endDrag(event){if(!drag)return;const {element}=drag;element.classList.remove('dragging');element.removeEventListener('pointermove',moveDrag);try{element.releasePointerCapture(event.pointerId)}catch{}drag=null}
+function restoreSnapshot(){if(!editSnapshot)return;racks=JSON.parse(JSON.stringify(editSnapshot));normalizeData();updateCounts()}
+function escapeHtml(value){return String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function rectanglesOverlap(a,b,padding=8){return a.x<a.x+a.w&&a.x<b.x+b.w+padding&&a.x+a.w+padding>b.x&&a.y<b.y+b.h+padding&&a.y+a.h+padding>b.y}
+function findFreeRackPosition(wPercent,hPercent){const roomW=room.clientWidth,roomH=room.clientHeight,w=roomW*wPercent/100,h=roomH*hPercent/100;for(let py=50;py<=roomH-h-50;py+=GRID_SIZE){for(let px=50;px<=roomW-w-50;px+=GRID_SIZE){const candidate={x:px,y:py,w,h};const occupied=racks.some(r=>rectanglesOverlap(candidate,{x:roomW*r.x/100,y:roomH*r.y/100,w:roomW*r.w/100,h:roomH*r.h/100}));if(!occupied)return{x:Number((px/roomW*100).toFixed(4)),y:Number((py/roomH*100).toFixed(4))}}}return null}
+function showAddRackForm(){document.getElementById('drawerTitle').textContent='Nova fileira';const f=document.getElementById('rackFront');f.innerHTML='<div class="empty" style="margin:20px">A nova fileira será criada em uma posição livre do grid e poderá ser arrastada depois.</div>';document.getElementById('details').innerHTML=`<section class="card item-form"><h3>Adicionar fileira</h3><div id="formError" class="form-error"></div><div class="form-grid"><div class="form-field full"><label>NOME / CÓDIGO DA FILEIRA *</label><input id="fNewRackName" maxlength="30" placeholder="Ex.: C9"></div><div class="form-field full"><label>ÁREA / RESPONSÁVEL</label><input id="fNewRackOwner" maxlength="60" placeholder="Ex.: NOC"></div><div class="form-field full"><label>FORMATO *</label><select id="fNewRackLayout"><option value="vertical">Vertical uniforme, escala 90%</option><option value="horizontal">Horizontal uniforme, escala 90%</option></select></div></div><div class="form-actions"><button class="mini-btn" id="cancelNewRack">Cancelar</button><button class="mini-btn primary" id="createRack">Criar fileira</button></div></section>`;document.getElementById('cancelNewRack').onclick=()=>overlay.classList.remove('open');document.getElementById('createRack').onclick=createRack;overlay.classList.add('open')}
+function createRack(){const id=document.getElementById('fNewRackName').value.trim(),owner=document.getElementById('fNewRackOwner').value.trim(),layout=document.getElementById('fNewRackLayout').value,error=document.getElementById('formError');const fail=msg=>{error.textContent=msg;error.classList.add('show')};if(!id)return fail('Informe o nome ou código da fileira.');if(racks.some(r=>r.id.toLowerCase()===id.toLowerCase()))return fail('Já existe outra fileira com esse nome ou código.');const dims=layout==='horizontal'?{w:8.5313,h:7.7064,front:'bottom'}:{w:1.625,h:57.4679,front:'right'};const pos=findFreeRackPosition(dims.w,dims.h);if(!pos)return fail('Não há uma posição livre suficiente no grid. Mova alguma fileira e tente novamente.');const rack={id,displayName:id,layout,x:pos.x,y:pos.y,w:dims.w,h:dims.h,front:dims.front,owner,items:[]};racks.push(rack);selectedRackId=id;updateCounts();render();document.getElementById('drawerTitle').textContent=id;renderRackDrawer(rack);showStatus(`FILEIRA ${id} ADICIONADA`)}
+function openRack(r){selectedRackId=r.id;editingItemId=null;document.getElementById('drawerTitle').textContent=r.displayName||'Fileira sem identificação';renderRackWorkspace(r);overlay.classList.add('open')}
+function renderRackWorkspace(r){const body=document.querySelector('.drawer-body');body.innerHTML=`<div class="rack-workspace"><div class="rack-toolbar"><input id="rackSearch" class="rack-search" placeholder="Buscar equipamento nesta fileira"><div class="zoom-bar"><button id="rackZoomOut" class="zoom-btn">−</button><span id="rackZoomValue" class="zoom-value">100%</span><button id="rackZoomReset" class="zoom-btn">100%</button><button id="rackZoomIn" class="zoom-btn">+</button></div>${editMode?'<button id="addItemButton" class="mini-btn primary">+ Adicionar equipamento</button><button id="editRackButton" class="mini-btn">Editar fileira</button>':''}</div><div id="rackViewport" class="rack-viewport"><div id="rackStage" class="rack-stage"><div id="rackFaceGrid" class="rack-face-grid"></div></div></div></div>`;const grid=document.getElementById('rackFaceGrid');const moduleCount=Math.max(1,Number(r.quantidadeModulos||8));const ruCount=Math.max(1,Number(r.quantidadeRU||44));grid.style.gridTemplateColumns=`repeat(${moduleCount},1fr)`;grid.style.gridTemplateRows=`repeat(${ruCount},1fr)`;for(let row=1;row<=ruCount;row++)for(let col=1;col<=moduleCount;col++){const cell=document.createElement('div');cell.className='rack-cell';cell.style.gridRow=row;cell.style.gridColumn=col;grid.appendChild(cell)}r.items.forEach(i=>{const e=document.createElement('button');e.type='button';e.className='rack-equipment'+(editMode?' editable':'');e.dataset.itemId=i.id;const rowStart=(ruCount+1)-(i.start+i.units-1),rowEnd=rowStart+i.units;e.style.gridRow=`${rowStart} / ${rowEnd}`;e.style.gridColumn=`${i.column||1} / span ${i.columnSpan||1}`;e.textContent=`U${i.start} • ${i.name}`;e.onclick=()=>{if(!rackPanMoved)showEquipmentModal(r,i);rackPanMoved=false};grid.appendChild(e)});document.getElementById('rackSearch').oninput=e=>filterRackItems(r,e.target.value);document.getElementById('rackZoomOut').onclick=()=>setRackZoom(rackZoom-.1);document.getElementById('rackZoomIn').onclick=()=>setRackZoom(rackZoom+.1);document.getElementById('rackZoomReset').onclick=()=>setRackZoom(1);const rackViewport=document.getElementById('rackViewport');rackViewport.addEventListener('wheel',e=>e.preventDefault(),{passive:false});rackViewport.addEventListener('pointerdown',startRackPan);rackViewport.addEventListener('pointermove',moveRackPan);rackViewport.addEventListener('pointerup',endRackPan);rackViewport.addEventListener('pointercancel',endRackPan);if(editMode){document.getElementById('addItemButton').onclick=()=>showItemForm(r);document.getElementById('editRackButton').onclick=()=>showRackForm(r)}setRackZoom(rackZoom)}
+function filterRackItems(r,q){q=q.trim().toLowerCase();const grid=document.getElementById('rackFaceGrid'),viewport=document.getElementById('rackViewport');grid.classList.toggle('searching',Boolean(q));const matches=[];grid.querySelectorAll('.rack-equipment').forEach(e=>{const i=r.items.find(x=>x.id===e.dataset.itemId);const hay=[i.name,i.manufacturer,i.model,i.serial,i.asset,i.function,i.notes].join(' ').toLowerCase();const match=Boolean(q)&&hay.includes(q);e.classList.toggle('match',match);if(match)matches.push(e)});if(matches.length===1){const target=matches[0];requestAnimationFrame(()=>{const scale=rackZoom;const centerX=(target.offsetLeft+target.offsetWidth/2)*scale,centerY=(target.offsetTop+target.offsetHeight/2)*scale;viewport.scrollTo({left:Math.max(0,centerX-viewport.clientWidth/2),top:Math.max(0,centerY-viewport.clientHeight/2),behavior:'smooth'})})}}
+function startRackPan(e){if(e.button!==0||e.target.closest('.rack-equipment')||e.target.closest('button')||e.target.closest('input'))return;e.preventDefault();rackPanMoved=false;rackPan={id:e.pointerId,x:e.clientX,y:e.clientY,left:e.currentTarget.scrollLeft,top:e.currentTarget.scrollTop,viewport:e.currentTarget};e.currentTarget.classList.add('panning');e.currentTarget.setPointerCapture(e.pointerId)}
+function moveRackPan(e){if(!rackPan||e.pointerId!==rackPan.id)return;const dx=e.clientX-rackPan.x,dy=e.clientY-rackPan.y;if(Math.abs(dx)>3||Math.abs(dy)>3)rackPanMoved=true;rackPan.viewport.scrollLeft=rackPan.left-dx;rackPan.viewport.scrollTop=rackPan.top-dy}
+function endRackPan(e){if(!rackPan||e.pointerId!==rackPan.id)return;try{rackPan.viewport.releasePointerCapture(e.pointerId)}catch{}rackPan.viewport.classList.remove('panning');rackPan=null}
+function setRackZoom(value){rackZoom=Math.max(.5,Math.min(2,Math.round(value*10)/10));const st=document.getElementById('rackStage');if(st)st.style.transform=`scale(${rackZoom})`;const val=document.getElementById('rackZoomValue');if(val)val.textContent=Math.round(rackZoom*100)+'%'}
+function showEquipmentModal(r,i){document.getElementById('equipmentModalTitle').textContent=i.name;document.getElementById('equipmentModalBody').innerHTML=`<div class="equipment-fields"><p><b>Fileira</b><br>${escapeHtml(r.id)}</p><p><b>Posição</b><br>U${i.start} a U${i.start+i.units-1}</p><p><b>Fabricante</b><br>${escapeHtml(i.manufacturer||'Não informado')}</p><p><b>Modelo</b><br>${escapeHtml(i.model||'Não informado')}</p><p><b>Número de série</b><br>${escapeHtml(i.serial||'Não informado')}</p><p><b>Patrimônio</b><br>${escapeHtml(i.asset||'Não informado')}</p><p><b>Função</b><br>${escapeHtml(i.function||'Não informada')}</p><p><b>Observações</b><br>${escapeHtml(i.notes||'Nenhuma')}</p></div>${(i.docs||[]).map(d=>`<div class="doc">📄 ${escapeHtml(d)}</div>`).join('')}${editMode?'<div class="form-actions"><button id="modalEditItem" class="mini-btn primary">Editar equipamento</button><button id="modalRemoveItem" class="mini-btn danger">Remover</button></div>':''}`;document.getElementById('equipmentModal').classList.add('open');if(editMode){document.getElementById('modalEditItem').onclick=()=>{document.getElementById('equipmentModal').classList.remove('open');showItemForm(r,i)};document.getElementById('modalRemoveItem').onclick=()=>{document.getElementById('equipmentModal').classList.remove('open');removeItem(r,i.id);renderRackWorkspace(r)}}}
+function showRackForm(r){document.getElementById('details').innerHTML=`<section class="card item-form"><h3>Editar fileira</h3><div id="formError" class="form-error"></div><div class="form-grid"><div class="form-field full"><label>NOME / CÓDIGO DA FILEIRA *</label><input id="fRackName" maxlength="30" value="${escapeHtml(r.id)}"></div><div class="form-field full"><label>ÁREA / RESPONSÁVEL</label><input id="fRackOwner" maxlength="60" value="${escapeHtml(r.owner||'')}"></div><div class="form-field full"><label>QUANTIDADE DE RACKS *</label><input id="fRackModuleCount" type="number" min="1" max="100" step="1" value="${Number(r.quantidadeModulos||8)}"></div></div><div class="form-actions"><button class="mini-btn" id="cancelRack">Cancelar</button><button class="mini-btn primary" id="saveRack">Salvar fileira</button></div></section>`;document.getElementById('cancelRack').onclick=()=>renderRackWorkspace(r);document.getElementById('saveRack').onclick=()=>saveRack(r)}
+function saveRack(r){const oldId=r.id,newId=document.getElementById('fRackName').value.trim(),owner=document.getElementById('fRackOwner').value.trim(),error=document.getElementById('formError');const fail=msg=>{error.textContent=msg;error.classList.add('show')};if(!newId)return fail('Informe o nome ou código da fileira.');if(racks.some(x=>x!==r&&x.id.toLowerCase()===newId.toLowerCase()))return fail('Já existe outra fileira com esse nome ou código.');r.id=newId;r.displayName=newId;r.owner=owner;selectedRackId=newId;document.getElementById('drawerTitle').textContent=newId;render();renderRackWorkspace(r);showStatus(oldId===newId?'FILEIRA ATUALIZADA':`FILEIRA ${oldId} RENOMEADA PARA ${newId}`)}
+function showItemForm(r,item=null){editingItemId=item?.id||null;const rackOptions=racks.map(x=>`<option value="${escapeHtml(x.id)}" ${x.id===r.id?'selected':''}>${escapeHtml(x.id)}</option>`).join('');document.getElementById('details').innerHTML=`<section class="card item-form"><h3>${item?'Editar equipamento':'Adicionar equipamento'}</h3><div id="formError" class="form-error"></div><div class="form-grid"><div class="form-field full"><label>NOME *</label><input id="fName" value="${escapeHtml(item?.name||'')}"></div><div class="form-field"><label>FILEIRA *</label><select id="fRack">${rackOptions}</select></div><div class="form-field"><label>RU INICIAL *</label><input id="fStart" type="number" min="1" max="42" value="${item?.start||1}"></div><div class="form-field"><label>ALTURA EM RU *</label><input id="fUnits" type="number" min="1" max="42" value="${item?.units||1}"></div><div class="form-field"><label>FABRICANTE</label><input id="fManufacturer" value="${escapeHtml(item?.manufacturer||'')}"></div><div class="form-field"><label>MODELO</label><input id="fModel" value="${escapeHtml(item?.model||'')}"></div><div class="form-field"><label>NÚMERO DE SÉRIE</label><input id="fSerial" value="${escapeHtml(item?.serial||'')}"></div><div class="form-field"><label>PATRIMÔNIO</label><input id="fAsset" value="${escapeHtml(item?.asset||'')}"></div><div class="form-field full"><label>FUNÇÃO</label><input id="fFunction" value="${escapeHtml(item?.function||'')}"></div><div class="form-field full"><label>OBSERVAÇÕES / DESCRIÇÃO</label><textarea id="fNotes">${escapeHtml(item?.notes||'')}</textarea></div></div><div class="form-actions"><button class="mini-btn" id="cancelItem">Cancelar</button><button class="mini-btn primary" id="saveItem">Salvar equipamento</button></div></section>`;document.getElementById('cancelItem').onclick=()=>renderRackWorkspace(r);document.getElementById('saveItem').onclick=()=>saveItem(r,item)}
+function rangesOverlap(aStart,aUnits,bStart,bUnits){const aEnd=aStart+aUnits-1,bEnd=bStart+bUnits-1;return aStart<=bEnd&&bStart<=aEnd}
+function saveItem(sourceRack,oldItem){const name=document.getElementById('fName').value.trim(),targetId=document.getElementById('fRack').value,start=Number(document.getElementById('fStart').value),units=Number(document.getElementById('fUnits').value),error=document.getElementById('formError');const targetRack=racks.find(r=>r.id===targetId);const fail=msg=>{error.textContent=msg;error.classList.add('show')};if(!name)return fail('Informe o nome do equipamento.');if(!Number.isInteger(start)||!Number.isInteger(units)||start<1||units<1||start+units-1>42)return fail('A faixa de RU deve permanecer entre U1 e U42.');const conflict=targetRack.items.find(i=>i.id!==oldItem?.id&&rangesOverlap(start,units,i.start,i.units));if(conflict)return fail(`Conflito de RU com “${conflict.name}”, que ocupa U${conflict.start} a U${conflict.start+conflict.units-1}.`);const data={id:oldItem?.id||'EQ-'+Date.now(),name,start,units,manufacturer:document.getElementById('fManufacturer').value.trim(),model:document.getElementById('fModel').value.trim(),serial:document.getElementById('fSerial').value.trim(),asset:document.getElementById('fAsset').value.trim(),function:document.getElementById('fFunction').value.trim(),notes:document.getElementById('fNotes').value.trim(),docs:oldItem?.docs||[]};if(oldItem)sourceRack.items=sourceRack.items.filter(i=>i.id!==oldItem.id);targetRack.items.push(data);targetRack.items.sort((a,b)=>b.start-a.start);selectedRackId=targetRack.id;updateCounts();const persisted=savePositions();overlay.classList.remove('open');setEditMode(false);showStatus(persisted?'EQUIPAMENTO SALVO':'EQUIPAMENTO APLICADO NESTA SESSÃO')}
+function removeItem(r,id){const item=r.items.find(i=>i.id===id);if(!item||!confirm(`Remover o equipamento “${item.name}”?`))return;r.items=r.items.filter(i=>i.id!==id);updateCounts();render();renderRackWorkspace(r)}
+function startMapPan(e){if(e.button!==0||e.target.closest('.rack')||e.target.closest('button')||e.target.closest('input'))return;e.preventDefault();mapPan={id:e.pointerId,x:e.clientX,left:roomWrap.scrollLeft};roomWrap.classList.add('panning');roomWrap.setPointerCapture(e.pointerId)}
+function moveMapPan(e){if(!mapPan||e.pointerId!==mapPan.id)return;roomWrap.scrollLeft=mapPan.left-(e.clientX-mapPan.x);roomWrap.scrollTop=0}
+function endMapPan(e){if(!mapPan||e.pointerId!==mapPan.id)return;try{roomWrap.releasePointerCapture(e.pointerId)}catch{}mapPan=null;roomWrap.classList.remove('panning')}
+roomWrap.addEventListener('pointerdown',startMapPan);roomWrap.addEventListener('pointermove',moveMapPan);roomWrap.addEventListener('pointerup',endMapPan);roomWrap.addEventListener('pointercancel',endMapPan);roomWrap.addEventListener('wheel',e=>{e.preventDefault();roomWrap.scrollTop=0},{passive:false});
+editButton.onclick=()=>setEditMode(true);
+addRackButton.onclick=showAddRackForm;
+saveButton.onclick=()=>{const persisted=savePositions();setEditMode(false);showStatus(persisted?'POSIÇÕES SALVAS':'ALTERAÇÕES APLICADAS NESTA SESSÃO')};
+cancelButton.onclick=()=>{restoreSnapshot();setEditMode(false)};
+document.getElementById('equipmentModalClose').onclick=()=>document.getElementById('equipmentModal').classList.remove('open');document.getElementById('equipmentModal').onclick=e=>{if(e.target.id==='equipmentModal')e.currentTarget.classList.remove('open')};
+search.addEventListener('input',e=>render(e.target.value));document.getElementById('close').onclick=()=>overlay.classList.remove('open');overlay.onclick=e=>{if(e.target===overlay)overlay.classList.remove('open')};document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(overlay.classList.contains('open'))overlay.classList.remove('open');else if(editMode){restoreSnapshot();setEditMode(false)}}});
+
+let authenticatedUser=null;
+
+const authSessionButton=
+  document.getElementById('authSessionButton');
+
+function isAdministrator(){
+  return authenticatedUser?.perfil==='Administrador';
+}
+
+function applyAuthenticationState(){
+  const administrator=isAdministrator();
+
+  editButton.hidden=!administrator;
+
+  if(!administrator&&editMode){
+    restoreSnapshot();
+    setEditMode(false);
+  }
+
+  if(administrator){
+    const displayName=
+      authenticatedUser.nome_exibicao
+      ||authenticatedUser.usuario;
+
+    authSessionButton.textContent=
+      displayName+' • Sair';
+
+    authSessionButton.title=
+      'Sessao administrativa ativa';
+  }else{
+    authSessionButton.textContent='Entrar';
+
+    authSessionButton.title=
+      'Entrar como administrador';
+  }
+}
+
+async function loadAuthenticationState(){
+  try{
+    const response=await fetch(
+      '/api/auth/me',
+      {
+        method:'GET',
+        credentials:'same-origin',
+        headers:{
+          Accept:'application/json'
+        },
+        cache:'no-store'
+      }
+    );
+
+    if(response.status===401){
+      authenticatedUser=null;
+      applyAuthenticationState();
+      return null;
+    }
+
+    if(!response.ok){
+      throw new Error(
+        `Falha ao consultar sessao (${response.status}).`
+      );
+    }
+
+    authenticatedUser=await response.json();
+    applyAuthenticationState();
+
+    return authenticatedUser;
+  }catch(error){
+    console.warn(
+      'Nao foi possivel consultar a sessao.',
+      error
+    );
+
+    authenticatedUser=null;
+    applyAuthenticationState();
+
+    return null;
+  }
+}
+
+async function logoutAdministrator(){
+  try{
+    await fetch(
+      '/api/auth/logout',
+      {
+        method:'POST',
+        credentials:'same-origin',
+        headers:{
+          Accept:'application/json'
+        }
+      }
+    );
+  }catch(error){
+    console.warn(
+      'Falha ao encerrar a sessao.',
+      error
+    );
+  }
+
+  authenticatedUser=null;
+  applyAuthenticationState();
+
+  window.location.reload();
+}
+
+authSessionButton.addEventListener(
+  'click',
+  async()=>{
+    if(isAdministrator()){
+      await logoutAdministrator();
+      return;
+    }
+
+    window.location.href='/login.html';
+  }
+);
+
+async function initializeApp(){
+  await loadAuthenticationState();
+  await loadSavedPositions();
+  normalizeData();
+  updateCounts();
+  render();
+}
+
+
+function rackPositionChanged(
+  currentRack,
+  originalRack
+){
+  if(!originalRack){
+    return false;
+  }
+
+  const tolerance=0.0001;
+
+  return(
+    Math.abs(
+      Number(currentRack.x)
+      -Number(originalRack.x)
+    )>tolerance
+    ||
+    Math.abs(
+      Number(currentRack.y)
+      -Number(originalRack.y)
+    )>tolerance
+    ||
+    Math.abs(
+      Number(currentRack.w)
+      -Number(originalRack.w)
+    )>tolerance
+    ||
+    Math.abs(
+      Number(currentRack.h)
+      -Number(originalRack.h)
+    )>tolerance
+  );
+}
+
+function getChangedRackPositions(){
+  if(!Array.isArray(editSnapshot)){
+    return [];
+  }
+
+  const originalByKey=new Map(
+    editSnapshot.map(
+      rack=>[
+        rack.rackKey||rack.id,
+        rack
+      ]
+    )
+  );
+
+  return racks.filter(
+    rack=>{
+      const rackKey=rack.rackKey||rack.id;
+      const originalRack=originalByKey.get(
+        rackKey
+      );
+
+      return rackPositionChanged(
+        rack,
+        originalRack
+      );
+    }
+  );
+}
+
+async function readApiError(response){
+  try{
+    const data=await response.json();
+
+    if(typeof data?.detail==='string'){
+      return data.detail;
+    }
+
+    return JSON.stringify(
+      data?.detail||data
+    );
+  }catch{
+    return(
+      'O servidor respondeu com HTTP '
+      +response.status
+      +'.'
+    );
+  }
+}
+
+async function saveRackPositionsToApi(){
+  if(!isAdministrator()){
+    throw new Error(
+      'Entre como administrador para salvar posicoes.'
+    );
+  }
+
+  const changedRacks=
+    getChangedRackPositions();
+
+  if(changedRacks.length===0){
+    return{
+      quantidade:0,
+      atualizados:[]
+    };
+  }
+
+  for(const rack of changedRacks){
+    if(
+      !Number.isInteger(rack.databaseId)
+      ||rack.databaseId<=0
+    ){
+      throw new Error(
+        'A fileira '
+        +(rack.displayName||rack.rackKey||rack.id)
+        +' nao possui databaseId valido.'
+      );
+    }
+
+    if(
+      !Number.isInteger(rack.version)
+      ||rack.version<=0
+    ){
+      throw new Error(
+        'A fileira '
+        +(rack.displayName||rack.rackKey||rack.id)
+        +' nao possui versao valida.'
+      );
+    }
+  }
+
+  const payload={
+    racks:changedRacks.map(
+      rack=>({
+        database_id:rack.databaseId,
+        versao_dados:rack.version,
+        posicao_x:Number(rack.x),
+        posicao_y:Number(rack.y),
+        largura:Number(rack.w),
+        altura:Number(rack.h)
+      })
+    )
+  };
+
+  const response=await fetch(
+    '/api/racks/positions/batch',
+    {
+      method:'PUT',
+      credentials:'same-origin',
+      headers:{
+        'Content-Type':'application/json',
+        Accept:'application/json'
+      },
+      body:JSON.stringify(payload)
+    }
+  );
+
+  if(response.status===401){
+    authenticatedUser=null;
+    applyAuthenticationState();
+
+    throw new Error(
+      'A sessao administrativa expirou. '
+      +'Entre novamente antes de salvar.'
+    );
+  }
+
+  if(response.status===403){
+    throw new Error(
+      'O usuario atual nao possui permissao '
+      +'para salvar posicoes.'
+    );
+  }
+
+  if(response.status===409){
+    const detail=await readApiError(
+      response
+    );
+
+    const conflictError=new Error(
+      detail
+      ||'Uma fileira foi alterada por outra sessao.'
+    );
+
+    conflictError.isConflict=true;
+
+    throw conflictError;
+  }
+
+  if(!response.ok){
+    throw new Error(
+      await readApiError(response)
+    );
+  }
+
+  const result=await response.json();
+
+  const updatedById=new Map(
+    result.atualizados.map(
+      rack=>[
+        rack.id,
+        rack
+      ]
+    )
+  );
+
+  for(const rack of changedRacks){
+    const updatedRack=updatedById.get(
+      rack.databaseId
+    );
+
+    if(updatedRack){
+      rack.version=
+        updatedRack.versao_dados;
+
+      rack.x=
+        updatedRack.posicao_x;
+
+      rack.y=
+        updatedRack.posicao_y;
+
+      rack.w=
+        updatedRack.largura;
+
+      rack.h=
+        updatedRack.altura;
+    }
+  }
+
+  return result;
+}
+
+saveButton.onclick=async()=>{
+  if(!isAdministrator()){
+    showStatus(
+      'ENTRE COMO ADMINISTRADOR'
+    );
+    return;
+  }
+
+  saveButton.disabled=true;
+
+  const originalText=
+    saveButton.textContent;
+
+  saveButton.textContent=
+    'Salvando...';
+
+  try{
+    const result=
+      await saveRackPositionsToApi();
+
+    setEditMode(false);
+
+    if(result.quantidade===0){
+      showStatus(
+        'NENHUMA POSICAO ALTERADA'
+      );
+    }else{
+      showStatus(
+        result.quantidade
+        +' POSICAO(OES) SALVA(S)'
+      );
+    }
+  }catch(error){
+    console.error(
+      'Falha ao salvar posicoes.',
+      error
+    );
+
+    if(error.isConflict){
+      showStatus(
+        'CONFLITO DE EDICAO'
+      );
+
+      window.alert(
+        'Conflito de edicao. '
+        +'Outro usuario alterou um das fileiras. '
+        +'As posicoes deste lote nao foram salvas. '
+        +'Atualize a pagina antes de tentar novamente.\n\n'
+        +error.message
+      );
+    }else{
+      showStatus(
+        'ERRO AO SALVAR POSICOES'
+      );
+
+      window.alert(
+        error.message
+        ||'Nao foi possivel salvar as posicoes.'
+      );
+    }
+  }finally{
+    saveButton.disabled=false;
+    saveButton.textContent=
+      originalText;
+  }
+};
+
+
+
+async function createRackThroughApi(){
+  if(!isAdministrator()){
+    throw new Error(
+      'Entre como administrador para criar fileiras.'
+    );
+  }
+
+  const nameInput=
+    document.getElementById('fNewRackName');
+
+  const ownerInput=
+    document.getElementById('fNewRackOwner');
+
+  const layoutInput=
+    document.getElementById('fNewRackLayout');
+
+  const moduleCountInput=
+    document.getElementById(
+      'fNewRackModuleCount'
+    );
+
+  const errorBox=
+    document.getElementById('formError');
+
+  const fail=message=>{
+    if(errorBox){
+      errorBox.textContent=message;
+      errorBox.classList.add('show');
+    }
+
+    throw new Error(message);
+  };
+
+  const displayName=
+    String(nameInput?.value||'').trim();
+
+  const owner=
+    String(ownerInput?.value||'').trim();
+
+  const layout=
+    String(layoutInput?.value||'vertical');
+
+  const moduleCount=
+    Number(
+      moduleCountInput?.value||8
+    );
+
+  if(
+    !Number.isInteger(moduleCount)
+    ||moduleCount<1
+    ||moduleCount>100
+  ){
+    return fail(
+      'A quantidade de racks deve '
+      +'ser um numero inteiro entre 1 e 100.'
+    );
+  }
+
+  if(!displayName){
+    return fail(
+      'Informe o nome ou codigo da fileira.'
+    );
+  }
+
+  if(
+    racks.some(
+      rack=>
+        String(
+          rack.displayName||rack.id||''
+        ).toLowerCase()
+        ===displayName.toLowerCase()
+    )
+  ){
+    return fail(
+      'Ja existe outra fileira com esse nome ou codigo.'
+    );
+  }
+
+  const dimensions=
+    layout==='horizontal'
+      ?{
+          w:8.5313,
+          h:7.7064,
+          front:'bottom'
+        }
+      :{
+          w:1.625,
+          h:57.4679,
+          front:'right'
+        };
+
+  const position=findFreeRackPosition(
+    dimensions.w,
+    dimensions.h
+  );
+
+  if(!position){
+    return fail(
+      'Nao ha uma posicao livre suficiente no grid.'
+    );
+  }
+
+  const rackKey=
+    'RACK-'
+    +Date.now().toString()
+    +'-'
+    +Math.random()
+      .toString(36)
+      .slice(2,8)
+      .toUpperCase();
+
+  const nextOrder=
+    racks.reduce(
+      (maximum,rack)=>
+        Math.max(
+          maximum,
+          Number(rack.order||0)
+        ),
+      0
+    )+1;
+
+  const payload={
+    rack_key:rackKey,
+    display_name:displayName,
+    layout:layout,
+    posicao_x:position.x,
+    posicao_y:position.y,
+    largura:dimensions.w,
+    altura:dimensions.h,
+    frente:dimensions.front,
+    area_responsavel:owner,
+    visivel:true,
+    ordem:nextOrder,
+    quantidade_modulos:moduleCount,
+    quantidade_ru:44
+  };
+
+  const response=await fetch(
+    '/api/racks',
+    {
+      method:'POST',
+      credentials:'same-origin',
+      headers:{
+        'Content-Type':'application/json',
+        Accept:'application/json'
+      },
+      body:JSON.stringify(payload)
+    }
+  );
+
+  if(response.status===401){
+    authenticatedUser=null;
+    applyAuthenticationState();
+
+    throw new Error(
+      'A sessao administrativa expirou. '
+      +'Entre novamente para criar a fileira.'
+    );
+  }
+
+  if(response.status===403){
+    throw new Error(
+      'O usuario atual nao possui permissao '
+      +'para criar fileiras.'
+    );
+  }
+
+  if(response.status===409){
+    throw new Error(
+      await readApiError(response)
+    );
+  }
+
+  if(!response.ok){
+    throw new Error(
+      await readApiError(response)
+    );
+  }
+
+  const createdRack=
+    await response.json();
+
+  const frontendRack={
+    databaseId:createdRack.id,
+    id:createdRack.display_name
+      ||createdRack.rack_key,
+    rackKey:createdRack.rack_key,
+    displayName:createdRack.display_name,
+    layout:createdRack.layout,
+    x:createdRack.posicao_x,
+    y:createdRack.posicao_y,
+    w:createdRack.largura,
+    h:createdRack.altura,
+    front:createdRack.frente,
+    owner:createdRack.area_responsavel||'',
+    items:[],
+    quantidadeModulos:
+      createdRack.quantidade_modulos,
+    quantidadeRU:
+      createdRack.quantidade_ru,
+    version:createdRack.versao_dados,
+    order:createdRack.ordem
+  };
+
+  racks.push(frontendRack);
+
+  selectedRackId=frontendRack.id;
+
+  updateCounts();
+  render();
+
+  overlay.classList.remove('open');
+
+  showStatus(
+    'FILEIRA '
+    +frontendRack.displayName
+    +' CRIADO'
+  );
+
+  return frontendRack;
+}
+
+
+createRack=async function(){
+  const createButton=
+    document.getElementById(
+      'createRackButton'
+    );
+
+  if(createButton){
+    createButton.disabled=true;
+  }
+
+  try{
+    return await createRackThroughApi();
+  }catch(error){
+    console.error(
+      'Falha ao criar fileira pela API.',
+      error
+    );
+
+    const errorBox=
+      document.getElementById('formError');
+
+    if(errorBox){
+      errorBox.textContent=
+        error.message
+        ||'Nao foi possivel criar a fileira.';
+
+      errorBox.classList.add('show');
+    }
+
+    return null;
+  }finally{
+    if(createButton){
+      createButton.disabled=false;
+    }
+  }
+};
+
+
+
+async function saveRackThroughApi(rack){
+  if(!isAdministrator()){
+    throw new Error(
+      'Entre como administrador para editar fileiras.'
+    );
+  }
+
+  if(
+    !Number.isInteger(rack.databaseId)
+    ||rack.databaseId<=0
+  ){
+    throw new Error(
+      'A fileira nao possui databaseId valido.'
+    );
+  }
+
+  if(
+    !Number.isInteger(rack.version)
+    ||rack.version<=0
+  ){
+    throw new Error(
+      'A fileira nao possui versao valida.'
+    );
+  }
+
+  const nameInput=
+    document.getElementById('fRackName');
+
+  const ownerInput=
+    document.getElementById('fRackOwner');
+
+  const moduleCountInput=
+    document.getElementById(
+      'fRackModuleCount'
+    );
+
+  const errorBox=
+    document.getElementById('formError');
+
+  const showFormError=message=>{
+    if(errorBox){
+      errorBox.textContent=message;
+      errorBox.classList.add('show');
+    }
+  };
+
+  const newDisplayName=
+    String(nameInput?.value||'').trim();
+
+  const newOwner=
+    String(ownerInput?.value||'').trim();
+
+  const newModuleCount=
+    Number(
+      moduleCountInput?.value
+      ||rack.quantidadeModulos
+      ||8
+    );
+
+  if(
+    !Number.isInteger(newModuleCount)
+    ||newModuleCount<1
+    ||newModuleCount>100
+  ){
+    const message=
+      'A quantidade de racks deve '
+      +'ser um numero inteiro entre 1 e 100.';
+
+    showFormError(message);
+    throw new Error(message);
+  }
+
+  if(!newDisplayName){
+    const message=
+      'Informe o nome ou codigo da fileira.';
+
+    showFormError(message);
+    throw new Error(message);
+  }
+
+  const duplicateRack=racks.find(
+    otherRack=>
+      otherRack!==rack
+      &&
+      String(
+        otherRack.displayName
+        ||otherRack.id
+        ||''
+      ).toLowerCase()
+      ===newDisplayName.toLowerCase()
+  );
+
+  if(duplicateRack){
+    const message=
+      'Ja existe outra fileira com esse nome ou codigo.';
+
+    showFormError(message);
+    throw new Error(message);
+  }
+
+  const payload={
+    versao_dados:rack.version,
+    display_name:newDisplayName,
+    area_responsavel:newOwner,
+    quantidade_modulos:newModuleCount
+  };
+
+  const response=await fetch(
+    '/api/racks/'+rack.databaseId,
+    {
+      method:'PUT',
+      credentials:'same-origin',
+      headers:{
+        'Content-Type':'application/json',
+        Accept:'application/json'
+      },
+      body:JSON.stringify(payload)
+    }
+  );
+
+  if(response.status===401){
+    authenticatedUser=null;
+    applyAuthenticationState();
+
+    throw new Error(
+      'A sessao administrativa expirou. '
+      +'Entre novamente antes de salvar.'
+    );
+  }
+
+  if(response.status===403){
+    throw new Error(
+      'O usuario atual nao possui permissao '
+      +'para editar fileiras.'
+    );
+  }
+
+  if(response.status===409){
+    const detail=await readApiError(
+      response
+    );
+
+    const conflictError=new Error(
+      detail
+      ||'A fileira foi alterada por outra sessao.'
+    );
+
+    conflictError.isConflict=true;
+
+    throw conflictError;
+  }
+
+  if(!response.ok){
+    throw new Error(
+      await readApiError(response)
+    );
+  }
+
+  const updatedRack=
+    await response.json();
+
+  const previousId=rack.id;
+
+  rack.rackKey=
+    updatedRack.rack_key;
+
+  rack.displayName=
+    updatedRack.display_name;
+
+  rack.id=
+    updatedRack.display_name
+    ||updatedRack.rack_key;
+
+  rack.owner=
+    updatedRack.area_responsavel||'';
+
+  rack.layout=
+    updatedRack.layout;
+
+  rack.x=
+    updatedRack.posicao_x;
+
+  rack.y=
+    updatedRack.posicao_y;
+
+  rack.w=
+    updatedRack.largura;
+
+  rack.h=
+    updatedRack.altura;
+
+  rack.front=
+    updatedRack.frente;
+
+  rack.quantidadeModulos=
+    updatedRack.quantidade_modulos;
+
+  rack.quantidadeRU=
+    updatedRack.quantidade_ru;
+
+  rack.version=
+    updatedRack.versao_dados;
+
+  rack.order=
+    updatedRack.ordem;
+
+  selectedRackId=rack.id;
+
+  document.getElementById(
+    'drawerTitle'
+  ).textContent=
+    rack.displayName
+    ||'Fileira sem identificacao';
+
+  render();
+  renderRackWorkspace(rack);
+
+  syncState.editing=null;
+
+  if(previousId===rack.id){
+    showStatus(
+      'FILEIRA ATUALIZADA'
+    );
+  }else{
+    showStatus(
+      'FILEIRA '
+      +previousId
+      +' RENOMEADA PARA '
+      +rack.id
+    );
+  }
+
+  return rack;
+}
+
+
+saveRack=async function(rack){
+  const saveButtonElement=
+    document.getElementById(
+      'saveRackButton'
+    );
+
+  if(saveButtonElement){
+    saveButtonElement.disabled=true;
+  }
+
+  try{
+    return await saveRackThroughApi(
+      rack
+    );
+  }catch(error){
+    console.error(
+      'Falha ao editar fileira pela API.',
+      error
+    );
+
+    const errorBox=
+      document.getElementById(
+        'formError'
+      );
+
+    if(errorBox){
+      errorBox.textContent=
+        error.message
+        ||'Nao foi possivel editar a fileira.';
+
+      errorBox.classList.add(
+        'show'
+      );
+    }
+
+    if(error.isConflict){
+      showStatus(
+        'CONFLITO DE EDICAO'
+      );
+
+      window.alert(
+        'Esta fileira foi alterada por outra sessao. '
+        +'Sua edicao nao foi gravada. '
+        +'Atualize a pagina antes de tentar novamente.'
+      );
+    }
+
+    return null;
+  }finally{
+    if(saveButtonElement){
+      saveButtonElement.disabled=false;
+    }
+  }
+};
+
+
+
+function getSelectedRack(){
+  return racks.find(
+    rack=>
+      rack.id===selectedRackId
+      ||rack.rackKey===selectedRackId
+  )||null;
+}
+
+function rackAdminActionHandler(event){
+  const actionButton=
+    event.target.closest(
+      '[data-action]'
+    );
+
+  if(!actionButton){
+    return;
+  }
+
+  const action=
+    actionButton.dataset.action;
+
+  if(
+    action!=='add-equipment'
+    &&action!=='edit-rack'
+  ){
+    return;
+  }
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  if(!isAdministrator()){
+    showStatus(
+      'ENTRE COMO ADMINISTRADOR'
+    );
+
+    window.location.href=
+      '/login.html';
+
+    return;
+  }
+
+  const selectedRack=
+    getSelectedRack();
+
+  if(!selectedRack){
+    console.error(
+      'Nenhuma fileira selecionada.',
+      {
+        selectedRackId,
+        racks
+      }
+    );
+
+    showStatus(
+      'FILEIRA NAO ENCONTRADA'
+    );
+
+    return;
+  }
+
+  if(action==='add-equipment'){
+    showItemForm(
+      selectedRack
+    );
+
+    return;
+  }
+
+  if(action==='edit-rack'){
+    showRackForm(
+      selectedRack
+    );
+  }
+}
+
+overlay.addEventListener(
+  'click',
+  rackAdminActionHandler,
+  true
+);
+
+
+
+function findCurrentSelectedRack(){
+  const overlayRackKey=
+    overlay?.dataset?.activeRackKey||'';
+
+  const overlayRackId=
+    overlay?.dataset?.activeRackId||'';
+
+  return racks.find(
+    rack=>
+      (
+        overlayRackKey
+        &&rack.rackKey===overlayRackKey
+      )
+      ||
+      (
+        overlayRackId
+        &&rack.id===overlayRackId
+      )
+      ||
+      rack.id===selectedRackId
+      ||
+      rack.rackKey===selectedRackId
+  )||null;
+}
+
+function definitiveRackButtonHandler(event){
+  const clickedElement=
+    event.target instanceof Element
+      ?event.target
+      :null;
+
+  if(!clickedElement){
+    return;
+  }
+
+  const addEquipmentButton=
+    clickedElement.closest(
+      '#addItemButton,'
+      +'[data-action="add-equipment"]'
+    );
+
+  const editRackButton=
+    clickedElement.closest(
+      '#editRackButton,'
+      +'[data-action="edit-rack"]'
+    );
+
+  if(
+    !addEquipmentButton
+    &&!editRackButton
+  ){
+    return;
+  }
+
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation();
+
+  if(!isAdministrator()){
+    showStatus(
+      'ENTRE COMO ADMINISTRADOR'
+    );
+
+    window.location.href=
+      '/login.html';
+
+    return;
+  }
+
+  const currentRack=
+    findCurrentSelectedRack();
+
+  if(!currentRack){
+    console.error(
+      'Fileira selecionada nao encontrada.',
+      {
+        selectedRackId,
+        overlayRackKey:
+          overlay?.dataset?.activeRackKey,
+        overlayRackId:
+          overlay?.dataset?.activeRackId
+      }
+    );
+
+    showStatus(
+      'FILEIRA NAO ENCONTRADA'
+    );
+
+    window.alert(
+      'Nao foi possivel identificar '
+      +'a fileira selecionada. '
+      +'Feche a visualizacao e abra '
+      +'a fileira novamente.'
+    );
+
+    return;
+  }
+
+  selectedRackId=currentRack.id;
+
+  if(addEquipmentButton){
+    showItemForm(
+      currentRack
+    );
+
+    return;
+  }
+
+  if(editRackButton){
+    showRackForm(
+      currentRack
+    );
+  }
+}
+
+document.addEventListener(
+  'click',
+  definitiveRackButtonHandler,
+  true
+);
+
+
+
+const drawerFormsCompatibilityApplied=true;
+
+function prepareDrawerFormContainer(){
+  const drawerBody=
+    document.querySelector(
+      '.drawer-body'
+    );
+
+  if(!drawerBody){
+    throw new Error(
+      'O corpo lateral da fileira nao foi encontrado.'
+    );
+  }
+
+  drawerBody.innerHTML=
+    '<div id="details" class="details"></div>';
+
+  const detailsContainer=
+    document.getElementById(
+      'details'
+    );
+
+  if(!detailsContainer){
+    throw new Error(
+      'Nao foi possivel criar '
+      +'o conteiner do formulario.'
+    );
+  }
+
+  return detailsContainer;
+}
+
+
+const originalShowRackForm=
+  showRackForm;
+
+showRackForm=function(rack){
+  prepareDrawerFormContainer();
+
+  return originalShowRackForm(
+    rack
+  );
+};
+
+
+const originalShowItemForm=
+  showItemForm;
+
+showItemForm=function(
+  rack,
+  item=null
+){
+  prepareDrawerFormContainer();
+
+  return originalShowItemForm(
+    rack,
+    item
+  );
+};
+
+
+
+function definitiveAddRackButtonHandler(event){
+  const clickedElement=
+    event.target instanceof Element
+      ?event.target
+      :null;
+
+  if(!clickedElement){
+    return;
+  }
+
+  const addRackTrigger=
+    clickedElement.closest(
+      '#addRackButton'
+    );
+
+  if(!addRackTrigger){
+    return;
+  }
+
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation();
+
+  if(!isAdministrator()){
+    showStatus(
+      'ENTRE COMO ADMINISTRADOR'
+    );
+
+    window.location.href=
+      '/login.html';
+
+    return;
+  }
+
+  if(typeof showAddRackForm!=='function'){
+    console.error(
+      'A funcao showAddRackForm '
+      +'nao esta disponivel.'
+    );
+
+    showStatus(
+      'ERRO AO ABRIR FORMULARIO'
+    );
+
+    window.alert(
+      'Nao foi possivel abrir '
+      +'o formulario de nova fileira.'
+    );
+
+    return;
+  }
+
+  try{
+    showAddRackForm();
+  }catch(error){
+    console.error(
+      'Falha ao abrir formulario '
+      +'de nova fileira.',
+      error
+    );
+
+    showStatus(
+      'ERRO AO ABRIR FORMULARIO'
+    );
+
+    window.alert(
+      error.message
+      ||'Nao foi possivel abrir '
+      +'o formulario de nova fileira.'
+    );
+  }
+}
+
+document.addEventListener(
+  'click',
+  definitiveAddRackButtonHandler,
+  true
+);
+
+
+
+const addRackFormCompatibilityApplied=true;
+
+const originalShowAddRackForm=
+  showAddRackForm;
+
+showAddRackForm=function(){
+  prepareDrawerFormContainer();
+
+  return originalShowAddRackForm();
+};
+
+
+
+const definitiveShowAddRackForm=true;
+
+showAddRackForm=function(){
+  if(!isAdministrator()){
+    showStatus(
+      'ENTRE COMO ADMINISTRADOR'
+    );
+
+    window.location.href='/login.html';
+    return;
+  }
+
+  const drawerBody=
+    document.querySelector('.drawer-body');
+
+  if(!drawerBody){
+    console.error(
+      'Elemento .drawer-body nao encontrado.'
+    );
+
+    window.alert(
+      'Nao foi possivel abrir o formulario '
+      +'porque o painel lateral nao foi encontrado.'
+    );
+
+    return;
+  }
+
+  document.getElementById(
+    'drawerTitle'
+  ).textContent='Nova fileira';
+
+  drawerBody.innerHTML=`
+    <section class="card item-form">
+      <h3>Adicionar fileira</h3>
+
+      <div
+        class="empty"
+        style="margin:0 0 18px"
+      >
+        A nova fileira sera criada em uma posicao
+        livre do grid e podera ser arrastada depois.
+      </div>
+
+      <div
+        id="formError"
+        class="form-error"
+      ></div>
+
+      <div class="form-grid">
+        <div class="form-field full">
+          <label>
+            NOME / CODIGO DA FILEIRA *
+          </label>
+
+          <input
+            id="fNewRackName"
+            maxlength="30"
+            placeholder="Ex.: C9"
+          >
+        </div>
+
+        <div class="form-field full">
+          <label>
+            AREA / RESPONSAVEL
+          </label>
+
+          <input
+            id="fNewRackOwner"
+            maxlength="60"
+            placeholder="Ex.: NOC"
+          >
+        </div>
+
+        <div class="form-field full">
+          <label>
+            FORMATO *
+          </label>
+
+          <select id="fNewRackLayout">
+            <option value="vertical">
+              Vertical
+            </option>
+
+            <option value="horizontal">
+              Horizontal
+            </option>
+          </select>
+        </div>
+
+        <div class="form-field full">
+          <label>
+            QUANTIDADE DE RACKS *
+          </label>
+
+          <input
+            id="fNewRackModuleCount"
+            type="number"
+            min="1"
+            max="100"
+            step="1"
+            value="8"
+          >
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="mini-btn"
+          id="cancelNewRack"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="mini-btn primary"
+          id="createRackButton"
+        >
+          Criar fileira
+        </button>
+      </div>
+    </section>
+  `;
+
+  const cancelButtonElement=
+    document.getElementById(
+      'cancelNewRack'
+    );
+
+  const createButtonElement=
+    document.getElementById(
+      'createRackButton'
+    );
+
+  const nameInput=
+    document.getElementById(
+      'fNewRackName'
+    );
+
+  if(
+    !cancelButtonElement
+    ||!createButtonElement
+    ||!nameInput
+  ){
+    console.error(
+      'Elementos do formulario de fileira '
+      +'nao foram criados corretamente.',
+      {
+        cancelButtonElement,
+        createButtonElement,
+        nameInput
+      }
+    );
+
+    window.alert(
+      'Nao foi possivel montar '
+      +'o formulario de nova fileira.'
+    );
+
+    return;
+  }
+
+  cancelButtonElement.onclick=()=>{
+    overlay.classList.remove('open');
+  };
+
+  createButtonElement.onclick=async()=>{
+    createButtonElement.disabled=true;
+
+    const originalText=
+      createButtonElement.textContent;
+
+    createButtonElement.textContent=
+      'Criando...';
+
+    try{
+      await createRack();
+    }catch(error){
+      console.error(
+        'Falha ao criar fileira.',
+        error
+      );
+
+      const errorBox=
+        document.getElementById(
+          'formError'
+        );
+
+      if(errorBox){
+        errorBox.textContent=
+          error.message
+          ||'Nao foi possivel criar a fileira.';
+
+        errorBox.classList.add('show');
+      }
+    }finally{
+      const currentButton=
+        document.getElementById(
+          'createRackButton'
+        );
+
+      if(currentButton){
+        currentButton.disabled=false;
+        currentButton.textContent=
+          originalText;
+      }
+    }
+  };
+
+  nameInput.addEventListener(
+    'keydown',
+    event=>{
+      if(event.key==='Enter'){
+        event.preventDefault();
+        createButtonElement.click();
+      }
+    }
+  );
+
+  overlay.classList.add('open');
+
+  window.setTimeout(
+    ()=>{
+      nameInput.focus();
+    },
+    0
+  );
+};
+
+
+
+
+const syncStateCompatibilityApplied=true;
+
+const syncState={
+  marker:null,
+  timer:null,
+  running:false,
+  editing:null,
+  pendingData:null
+};
+
+const definitiveEquipmentForm44U=true;
+
+showItemForm=function(
+  rack,
+  item=null
+){
+  if(!isAdministrator()){
+    showStatus(
+      'ENTRE COMO ADMINISTRADOR'
+    );
+
+    window.location.href='/login.html';
+    return;
+  }
+
+  const drawerBody=
+    document.querySelector('.drawer-body');
+
+  if(!drawerBody){
+    throw new Error(
+      'O painel lateral da fileira nao foi encontrado.'
+    );
+  }
+
+  const selectedRackKey=
+    item?.rackKey
+    ||rack.rackKey;
+
+  const selectedModule=
+    Number(
+      item?.moduloRack
+      ||item?.module
+      ||1
+    );
+
+  const selectedStart=
+    Number(
+      item?.start
+      ||1
+    );
+
+  const selectedUnits=
+    Number(
+      item?.units
+      ||1
+    );
+
+  const rackOptions=racks
+    .map(
+      currentRack=>{
+        const label=
+          currentRack.displayName
+          ||currentRack.rackKey
+          ||currentRack.id;
+
+        const selected=
+          currentRack.rackKey
+          ===selectedRackKey
+            ?'selected'
+            :'';
+
+        return(
+          '<option value="'
+          +escapeHtml(
+            currentRack.rackKey
+          )
+          +'" '
+          +selected
+          +'>'
+          +escapeHtml(label)
+          +'</option>'
+        );
+      }
+    )
+    .join('');
+
+  const moduleOptions=
+    Array.from(
+      {
+        length:Number(
+          rack.quantidadeModulos
+          ||8
+        )
+      },
+      (_,index)=>{
+        const moduleNumber=index+1;
+
+        const selected=
+          moduleNumber===selectedModule
+            ?'selected'
+            :'';
+
+        return(
+          '<option value="'
+          +moduleNumber
+          +'" '
+          +selected
+          +'>Rack '
+          +moduleNumber
+          +'</option>'
+        );
+      }
+    )
+    .join('');
+
+  editingItemId=
+    item?.id
+    ||null;
+
+  syncState.editing={
+    type:'equipment',
+    key:
+      item?.equipmentKey
+      ||item?.id
+      ||null,
+    version:
+      item?.version
+      ||0
+  };
+
+  document.getElementById(
+    'drawerTitle'
+  ).textContent=
+    item
+      ?'Editar equipamento'
+      :'Novo equipamento';
+
+  drawerBody.innerHTML=`
+    <section class="card item-form">
+      <h3>
+        ${item
+          ?'Editar equipamento'
+          :'Adicionar equipamento'}
+      </h3>
+
+      <p class="edit-hint">
+        Cada conjunto possui 8 racks fisicos.
+        Cada rack possui 44U somente na parte frontal.
+      </p>
+
+      <div
+        id="formError"
+        class="form-error"
+      ></div>
+
+      <div class="form-grid">
+        <div class="form-field full">
+          <label
+            style="
+              display:flex;
+              align-items:center;
+              gap:10px;
+              cursor:pointer;
+              padding:10px 12px;
+              border:1px solid var(--line);
+              border-radius:9px;
+              background:#07111f;
+              color:#edf4fb;
+              font-size:12px;
+            "
+          >
+            <input
+              id="fIsPatch"
+              type="checkbox"
+              ${item?.isPatch
+                ?'checked'
+                :''}
+              style="
+                width:auto;
+                margin:0;
+                accent-color:#22d3ee;
+              "
+            >
+            E PATCH?
+          </label>
+
+          <div
+            style="
+              margin-top:6px;
+              color:var(--muted);
+              font-size:11px;
+            "
+          >
+            Marque para habilitar as 32 posicoes
+            de entrada e saida deste equipamento.
+          </div>
+        </div>
+
+        <div class="form-field full">
+          <label>NOME *</label>
+
+          <input
+            id="fName"
+            maxlength="200"
+            value="${escapeHtml(
+              item?.name||''
+            )}"
+          >
+        </div>
+
+        <div class="form-field">
+          <label>FILEIRA *</label>
+
+          <select id="fRackKey">
+            ${rackOptions}
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label>RACK FISICO *</label>
+
+          <select id="fModule">
+            ${moduleOptions}
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label>RU INICIAL *</label>
+
+          <input
+            id="fStart"
+            type="number"
+            min="1"
+            max="44"
+            value="${selectedStart}"
+          >
+        </div>
+
+        <div class="form-field">
+          <label>ALTURA EM RU *</label>
+
+          <input
+            id="fUnits"
+            type="number"
+            min="1"
+            max="44"
+            value="${selectedUnits}"
+          >
+        </div>
+
+        <div class="form-field">
+          <label>FABRICANTE</label>
+
+          <input
+            id="fManufacturer"
+            maxlength="200"
+            value="${escapeHtml(
+              item?.manufacturer||''
+            )}"
+          >
+        </div>
+
+        <div class="form-field">
+          <label>MODELO</label>
+
+          <input
+            id="fModel"
+            maxlength="200"
+            value="${escapeHtml(
+              item?.model||''
+            )}"
+          >
+        </div>
+
+        <div class="form-field">
+          <label>NUMERO DE SERIE</label>
+
+          <input
+            id="fSerial"
+            maxlength="200"
+            value="${escapeHtml(
+              item?.serial||''
+            )}"
+          >
+        </div>
+
+        <div class="form-field">
+          <label>PATRIMONIO</label>
+
+          <input
+            id="fAsset"
+            maxlength="200"
+            value="${escapeHtml(
+              item?.asset||''
+            )}"
+          >
+        </div>
+
+        <div class="form-field full">
+          <label>FUNCAO</label>
+
+          <input
+            id="fFunction"
+            maxlength="500"
+            value="${escapeHtml(
+              item?.function||''
+            )}"
+          >
+        </div>
+
+        <div class="form-field full">
+          <label>OBSERVACOES / DESCRICAO</label>
+
+          <textarea
+            id="fNotes"
+          >${escapeHtml(
+            item?.notes||''
+          )}</textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="mini-btn"
+          id="cancelItem"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          class="mini-btn primary"
+          id="saveItemButton"
+        >
+          ${item
+            ?'Salvar alteracoes'
+            :'Criar equipamento'}
+        </button>
+      </div>
+    </section>
+  `;
+
+  const cancelButton=
+    document.getElementById(
+      'cancelItem'
+    );
+
+  const saveButtonElement=
+    document.getElementById(
+      'saveItemButton'
+    );
+
+  const rackSelect=
+    document.getElementById(
+      'fRackKey'
+    );
+
+  const moduleSelect=
+    document.getElementById(
+      'fModule'
+    );
+
+  const updateModuleOptions=()=>{
+    const destinationRack=
+      racks.find(
+        currentRack=>
+          currentRack.rackKey
+          ===rackSelect.value
+      );
+
+    const moduleCount=
+      Number(
+        destinationRack
+          ?.quantidadeModulos
+        ||8
+      );
+
+    const previousValue=
+      Number(
+        moduleSelect.value
+        ||1
+      );
+
+    moduleSelect.innerHTML=
+      Array.from(
+        {
+          length:moduleCount
+        },
+        (_,index)=>{
+          const moduleNumber=index+1;
+
+          return(
+            '<option value="'
+            +moduleNumber
+            +'">Rack '
+            +moduleNumber
+            +'</option>'
+          );
+        }
+      ).join('');
+
+    moduleSelect.value=
+      String(
+        Math.min(
+          previousValue,
+          moduleCount
+        )
+      );
+  };
+
+  rackSelect.addEventListener(
+    'change',
+    updateModuleOptions
+  );
+
+  cancelButton.onclick=()=>{
+    syncState.editing=null;
+    renderRackWorkspace(rack);
+  };
+
+  saveButtonElement.onclick=()=>{
+    const errorBox=
+      document.getElementById(
+        'formError'
+      );
+
+    errorBox.textContent=
+      'Formulario atualizado para 8 racks '
+      +'de 44U. A gravacao pela API sera '
+      +'habilitada no proximo bloco.';
+
+    errorBox.classList.add('show');
+  };
+
+  window.setTimeout(
+    ()=>{
+      document.getElementById(
+        'fName'
+      )?.focus();
+    },
+    0
+  );
+};
+
+
+initializeApp();
+</script>
+<script src="/equipment-create.js?v=2"></script>
+<script src="/equipment-update.js?v=2"></script>
+<script src="/patch-map-ui.js?v=6"></script>
+<script src="/patch-responsive-fix.js?v=2"></script>
+<script src="/equipment-visual.js?v=2"></script>
+<script src="/equipment-zoom.js"></script>
+<script src="/rack-delete.js?v=2"></script>
+<script src="/equipment-delete.js?v=2"></script>
+<script src="/equipment-documents.js"></script>
+<script src="/equipment-document-upload.js"></script>
+<script src="/equipment-document-delete.js"></script>
+<script src="/history-ui.js"></script>
+<script src="/history-data.js?v=2"></script>
+<script src="/history-details.js?v=2"></script>
+<script src="/history-filters.js?v=2"></script>
+<script src="/rack-grid-dynamic.js?v=3"></script>
+<script src="/rooms-ui.js?v=3"></script>
+<script src="/rooms-hpa-polish.js?v=3"></script>
+<script src="/rack-panel-responsive.js?v=1"></script>
+<script src="/rack-fit-view.js?v=2"></script>
+<script src="/rack-pan-bounds-fix.js?v=2"></script>
+<script src="/sync-polling.js?v=2"></script>
+<script src="/sync-realtime-fix.js?v=2"></script>
+<script src="/patch-position-click-fix.js?v=3"></script>
+<script src="/equipment-update-dedup.js?v=1"></script>
+<script src="/equipment-update-noop.js?v=2"></script>
+<script src="/patch-readonly.js?v=2"></script>
+<script src="/map-pan-2d-safe.js?v=1"></script>
+<script src="/home-search-enhanced.js?v=2"></script>
+<script src="/rack-module-labels.js?v=2"></script>
+<script src="/sala-fria-extension.js?v=4"></script>
+<script src="/sala-fria-world-edit.js?v=1"></script>
+<script src="/patch-connection-indicator.js?v=3"></script>
+<script src="/patch-readonly-position.js?v=3"></script>
+<script src="/patch-connection-editor.js?v=2"></script>
+<script src="/patch-manual-destination.js?v=2"></script>
+<script src="/patch-manual-link-suggestion.js?v=3"></script>
+<script src="/patch-manual-edit-fix.js?v=1"></script>
+<script src="/mapa-fileiras.js?v=2"></script>
+<script src="/mapa-planta.js?v=2"></script>
+<script src="/mapa-tema.js?v=3"></script>
+</body>
+</html>
